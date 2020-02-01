@@ -3,43 +3,84 @@
 from pynput import keyboard
 import time
 
+asciiOf = {
+    ". - "     : "A",
+    "- . . . " : "B",
+    "- . - . " : "C",
+    "- . . "   : "D",
+    ". "       : "E",
+    ". . - . " : "F",
+    "- - . "   : "G",
+    ". . . . " : "H",
+    ". . "     : "I",
+    ". - - - " : "J",
+    "- . - "   : "K",
+    ". - . . " : "L",
+    "- - "     : "M",
+    "- . "     : "N",
+    "- - - "   : "O",
+    ". - - . " : "P",
+    "- - . - " : "Q",
+    ". - . "   : "R",
+    ". . . "   : "S",
+    "- "       : "T",
+    ". . - "   : "U",
+    ". . . - " : "V",
+    ". - - "   : "W",
+    "- . . - " : "X",
+    "- . - - " : "Y",
+    "- - . . " : "Z"
+}
+
 
 def on_keydown(key):
     global pressed
     global t
     global t2
+    global morseStr
+    global fullStr
 
     if not pressed:
         if t2 is not 0:
             ti2 = time.time() - t2
             if ti2 > 0.650:
-                print(" ", end=" ")
+                if ti2 > 1.2:
+                    try:
+                        fullStr += asciiOf[morseStr]
+                    except KeyError:
+                        print(f"{morseStr} is invalid Morse Code...")
+                        exit(-1)
 
-            # ti2 = str(time.time() - t2)[0:5]
-            # print(f"There was a break for {ti2} seconds")
+                    print(f"\nTranslates to: {fullStr}")
+                    fullStr = ""
+                    morseStr = ""
+                else:
+                    fullStr += asciiOf[morseStr]
+                    print(" ", end=" ")
+                    morseStr = ""
 
         t = time.time()
         pressed = True
 
 
 def on_keyup(key):
+    global morseStr
+    global pressed
+    global t2
+
     ti1 = time.time() - t
     if ti1 > 0.205:
         print("-", end=" ")
+        morseStr += "- "
     else:
         print(".", end=" ")
+        morseStr += ". "
 
-    # ti1 = str(time.time() - t)[0:5]  # time actual
-    # print(f"The key {key} was pressed for {ti1} seconds")
-
-    global pressed
     pressed = False
-
-    global t2
     t2 = time.time()
 
     if str(key) == 'Key.esc':
-        return False  # stop listening
+        return False
 
 
 with keyboard.Listener(
@@ -47,11 +88,8 @@ with keyboard.Listener(
         on_release=on_keyup) as listener:
     pressed = False
     t2 = 0
+    morseStr = ""
+    fullStr = ""
     listener.join()
 
 
-# TODO:
-#   Features:
-#       -> Quantify (one per unrestricted size) that "spaces" or breaks occur
-#            ===> Should be "risky", since feeling latency is not ideal...
-#       -> Choose a DS/A (maybe map?) to 'convert' morse to ascii AFAP
