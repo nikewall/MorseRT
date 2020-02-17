@@ -21,9 +21,7 @@ I believe that it is important to keep some sort of connection with our origins
 Also, it seemed like a fun challenge to do real-time, clocked key polling :P
 
 ## What it Does
-**MorseRT** stands for "Morse in Real Time". Of course all Morse Code is
-in real time, but this also converts Morse->ASCII with (hopefully) minimal latency
-to the end user.
+**MorseRT** stands for "Morse in Real Time". Instead of being a system where the inputs, - (long) or . (short), are explicit characters, the program runs by pressing and holding <Space> for short and long periods of time -- just as one would if tapping Morse Code over a telegraph. Seperation of words is denoted by a "short gap" in input of around half a second , while seperation of sentences is denoted by a "long gap" in input of greater than a second.  
 
 ## Technical
 
